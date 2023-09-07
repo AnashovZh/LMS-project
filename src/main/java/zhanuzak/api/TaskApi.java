@@ -1,11 +1,10 @@
 package zhanuzak.api;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.web.bind.annotation.*;
-import zhanuzak.request.TaskRequest;
-import zhanuzak.response.SimpleResponse;
-import zhanuzak.response.TaskResponse;
+import zhanuzak.dto.request.TaskRequest;
+import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.dto.response.TaskResponse;
 import zhanuzak.service.TaskService;
 
 import java.util.List;

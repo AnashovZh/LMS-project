@@ -1,10 +1,11 @@
 package zhanuzak.service;
 
-import zhanuzak.request.StudentRequest;
-import zhanuzak.response.SimpleResponse;
-import zhanuzak.response.StudentResponse;
+import zhanuzak.dto.request.StudentRequest;
+import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.dto.response.StudentResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StudentService {
 
@@ -17,4 +18,6 @@ public interface StudentService {
     SimpleResponse updateStudent(Long id, StudentRequest studentRequest);
 
     SimpleResponse deleteStudent(Long id);
+
+    SimpleResponse isBlockedStudent(Long id, Map<String, Object> fields);
 }

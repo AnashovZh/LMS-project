@@ -2,10 +2,10 @@ package zhanuzak.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import zhanuzak.request.GroupRequest;
-import zhanuzak.response.CounterStudentByGroup;
-import zhanuzak.response.GroupResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.GroupRequest;
+import zhanuzak.dto.response.CounterStudentByGroup;
+import zhanuzak.dto.response.GroupResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.GroupService;
 
 import java.util.List;
@@ -33,7 +33,9 @@ public class GroupApi {
     }
 
     @PutMapping("/{courseId}/update/{id}")
-    SimpleResponse updateGroup(@PathVariable Long courseId, @PathVariable Long id, @RequestBody GroupRequest groupRequest) {
+    SimpleResponse updateGroup(@PathVariable Long courseId,
+                               @PathVariable Long id,
+                               @RequestBody GroupRequest groupRequest) {
         return groupService.updateGroupWithCourse(courseId, id, groupRequest);
     }
 

@@ -1,4 +1,4 @@
-package zhanuzak.response;
+package zhanuzak.dto.response;
 
 import lombok.Builder;
 import org.springframework.http.HttpStatus;

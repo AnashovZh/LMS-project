@@ -9,9 +9,9 @@ import zhanuzak.entity.Task;
 import zhanuzak.exceptions.NotFoundException;
 import zhanuzak.repo.LessonRepository;
 import zhanuzak.repo.TaskRepository;
-import zhanuzak.request.TaskRequest;
-import zhanuzak.response.SimpleResponse;
-import zhanuzak.response.TaskResponse;
+import zhanuzak.dto.request.TaskRequest;
+import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.dto.response.TaskResponse;
 import zhanuzak.service.TaskService;
 
 import java.util.List;

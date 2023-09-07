@@ -2,15 +2,14 @@ package zhanuzak.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import zhanuzak.request.InstructorRequest;
-import zhanuzak.response.AboutInstructor;
-import zhanuzak.response.CounterStudentByGroup;
-import zhanuzak.response.InstructorResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.InstructorRequest;
+import zhanuzak.dto.response.AboutInstructor;
+import zhanuzak.dto.response.CounterStudentByGroup;
+import zhanuzak.dto.response.InstructorResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.InstructorService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/instructors")
@@ -43,7 +42,7 @@ public class InstructorApi {
         return instructorService.deleteInstructor(id);
     }
 
-    @PostMapping("/{companyId}/{id}")
+    @PostMapping("/company/{companyId}/instructor/{id}")
     SimpleResponse assignInstructorToCompany(@PathVariable Long companyId,
                                              @PathVariable Long id) {
         return instructorService.assignInstructorToCompany(companyId, id);
@@ -54,7 +53,7 @@ public class InstructorApi {
         return instructorService.counterStudentsByInstructor(id);
     }
 
-    @PostMapping("/{courseId}/assignToCourse/{id}")
+    @PostMapping("/course{courseId}/assignToCourse/instructor/{id}")
     SimpleResponse assignInstructorToCourse(@PathVariable Long courseId,
                                             @PathVariable Long id) {
         return instructorService.assignInstructorToCourse(courseId, id);

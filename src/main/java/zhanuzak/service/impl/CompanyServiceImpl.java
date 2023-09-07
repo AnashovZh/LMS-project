@@ -1,20 +1,23 @@
 package zhanuzak.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
-import zhanuzak.entity.Company;
-import zhanuzak.entity.Course;
-import zhanuzak.entity.Group;
-import zhanuzak.entity.Instructor;
+import zhanuzak.dto.pagination.CompanyPagination;
+import zhanuzak.entity.*;
+import zhanuzak.enums.Country;
 import zhanuzak.exceptions.NotFoundException;
 import zhanuzak.repo.CompanyRepository;
-import zhanuzak.request.CompanyRequest;
-import zhanuzak.response.AboutCompany;
-import zhanuzak.response.CompanyResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.CompanyRequest;
+import zhanuzak.dto.response.AboutCompany;
+import zhanuzak.dto.response.CompanyResponse;
+import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.dto.response.StudentResponse;
 import zhanuzak.service.CompanyService;
 
 import java.lang.reflect.Field;
@@ -80,9 +83,22 @@ public class CompanyServiceImpl implements CompanyService {
                         "Company with id:" + id + " not found!"));
         fields.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(Company.class, key);
-            field.setAccessible(true);
-            ReflectionUtils.setField(field, company, value);
+            if (field != null) {
+                field.setAccessible(true);
+                Object fieldValue = null;
+                if (value instanceof String && field.getType() == String.class) {
+                    fieldValue = value;
+                } else if (value instanceof Country && field.getType() == Country.class) {
+                    fieldValue = value;
+                }
+                if (fieldValue != null) {
+
+                    ReflectionUtils.setField(field, company, value);
+                }
+            }
         });
+
+        companyRepository.save(company);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Successfully updated id: " + id + " ☺")
@@ -90,9 +106,9 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public SimpleResponse deleteInstructor(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new NotFoundException("" +
-                "Company with id:" + id + " not found!!!"));
+    public SimpleResponse deleteCompany(Long id) {
+        Company company = companyRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Company with id:" + id + " not found!!!"));
         companyRepository.delete(company);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -133,5 +149,60 @@ public class CompanyServiceImpl implements CompanyService {
                 .groupNames(groupName)
                 .allStudentsOfNumber(studentsOfNumber)
                 .build();
+    }
+
+    @Override
+    public List<StudentResponse> getAllStudentsOnlineEducation(Long id) {
+        List<Student> allStudents = getAllStudents(id);
+        List<StudentResponse> studentResponses = new ArrayList<>();
+        for (Student s : allStudents) {
+            if (s.getStudyFormat().name().equals("ONLINE")) {
+                studentResponses.add(new StudentResponse(s.getId(), s.getFirstName(), s.getLastName(),
+                        s.getPhoneNumber(), s.getEmail(), s.getStudyFormat(), s.getIsBlocked()));
+            }
+        }
+        return studentResponses;
+    }
+
+    @Override
+    public List<StudentResponse> getAllStudentsOfflineEducation(Long id) {
+        List<Student> allStudents = getAllStudents(id);
+        List<StudentResponse> studentResponses = new ArrayList<>();
+        for (Student s : allStudents) {
+            if (s.getStudyFormat().name().equals("OFFLINE")) {
+
+                studentResponses.add(new StudentResponse(s.getId(), s.getFirstName(),
+                        s.getLastName(), s.getPhoneNumber(), s.getEmail(), s.getStudyFormat(), s.getIsBlocked()));
+            }
+        }
+        return studentResponses;
+    }
+
+    @Override
+    public List<Student> getAllStudents(Long id) {
+        Company company = companyRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Company with id:" + " not found !!!"));
+        List<Course> courses = company.getCourses();
+        List<Group> groups = new ArrayList<>();
+        List<Student> students = new ArrayList<>();
+        for (Course c : courses) {
+            groups.addAll(c.getGroups());
+        }
+        for (Group g : groups) {
+            students.addAll(g.getStudents());
+        }
+        return students;
+    }
+
+    @Override
+    public CompanyPagination getAllPaginationCompany(int currentPage, int pageSize) {
+        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Page<CompanyResponse> getAllCompanies = companyRepository.findAllCompanies(pageable);
+        return CompanyPagination.builder()
+                .companies(getAllCompanies.getContent())
+                .currentPage(getAllCompanies.getNumber()+1)
+                .pageSize(getAllCompanies.getTotalPages()-1)
+                .build();
+
     }
 }

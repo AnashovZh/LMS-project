@@ -1,11 +1,11 @@
 package zhanuzak.service;
 
 import zhanuzak.entity.Student;
-import zhanuzak.request.InstructorRequest;
-import zhanuzak.response.AboutInstructor;
-import zhanuzak.response.CounterStudentByGroup;
-import zhanuzak.response.InstructorResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.InstructorRequest;
+import zhanuzak.dto.response.AboutInstructor;
+import zhanuzak.dto.response.CounterStudentByGroup;
+import zhanuzak.dto.response.InstructorResponse;
+import zhanuzak.dto.response.SimpleResponse;
 
 import java.util.List;
 

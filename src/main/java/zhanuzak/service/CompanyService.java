@@ -1,9 +1,12 @@
 package zhanuzak.service;
 
-import zhanuzak.request.CompanyRequest;
-import zhanuzak.response.AboutCompany;
-import zhanuzak.response.CompanyResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.pagination.CompanyPagination;
+import zhanuzak.entity.Student;
+import zhanuzak.dto.request.CompanyRequest;
+import zhanuzak.dto.response.AboutCompany;
+import zhanuzak.dto.response.CompanyResponse;
+import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.dto.response.StudentResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -17,9 +20,16 @@ public interface CompanyService {
 
     SimpleResponse updateCompany(Long id, CompanyRequest companyRequest);
 
-    SimpleResponse deleteInstructor(Long id);
+    SimpleResponse deleteCompany(Long id);
 
     SimpleResponse updateCompanyMap(Long id, Map<String, Object> fields);
 
     AboutCompany getCompanyAboutById(Long id);
+
+    List<StudentResponse> getAllStudentsOnlineEducation(Long id);
+    List<Student>getAllStudents(Long id);
+
+    List<StudentResponse> getAllStudentsOfflineEducation(Long id);
+
+    CompanyPagination getAllPaginationCompany(int currentPage, int pageSize);
 }

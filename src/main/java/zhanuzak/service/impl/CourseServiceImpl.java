@@ -1,17 +1,21 @@
 package zhanuzak.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zhanuzak.dto.pagination.CoursePagination;
 import zhanuzak.entity.Company;
 import zhanuzak.entity.Course;
 import zhanuzak.exceptions.NotFoundException;
 import zhanuzak.repo.CompanyRepository;
 import zhanuzak.repo.CourseRepository;
-import zhanuzak.request.CourseRequest;
-import zhanuzak.response.CourseResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.CourseRequest;
+import zhanuzak.dto.response.CourseResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.CourseService;
 
 import java.util.List;
@@ -94,5 +98,22 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseResponse> dateOfStartCourseNew() {
         return courseRepository.dateOfStartCourseNew();
+    }
+
+    @Override
+    public List<CourseResponse> dateOfStartCourseOwns() {
+        return courseRepository.dateOfStartCourseOwns();
+    }
+
+    @Override
+    public CoursePagination getAllCoursesPagination(int currenPage, int pageSize) {
+        Pageable pageable= PageRequest.of(currenPage,pageSize);
+        Page<CourseResponse>courses=courseRepository.findAllCourses(pageable);
+        return CoursePagination.builder()
+                .courses(courses.getContent())
+                .currentPage(courses.getNumber())
+                .pageSize(courses.getTotalPages())
+                .build();
+
     }
 }

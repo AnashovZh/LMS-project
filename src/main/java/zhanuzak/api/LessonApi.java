@@ -2,9 +2,9 @@ package zhanuzak.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import zhanuzak.request.LessonRequest;
-import zhanuzak.response.LessonResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.LessonRequest;
+import zhanuzak.dto.response.LessonResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.LessonService;
 
 import java.util.List;

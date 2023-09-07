@@ -1,8 +1,9 @@
 package zhanuzak.service;
 
-import zhanuzak.request.CourseRequest;
-import zhanuzak.response.CourseResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.pagination.CoursePagination;
+import zhanuzak.dto.request.CourseRequest;
+import zhanuzak.dto.response.CourseResponse;
+import zhanuzak.dto.response.SimpleResponse;
 
 import java.util.List;
 
@@ -21,4 +22,7 @@ public interface CourseService {
 
     List<CourseResponse> dateOfStartCourseNew();
 
+    List<CourseResponse> dateOfStartCourseOwns();
+
+    CoursePagination getAllCoursesPagination(int currenPage, int pageSize);
 }

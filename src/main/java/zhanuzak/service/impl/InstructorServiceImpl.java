@@ -1,6 +1,5 @@
 package zhanuzak.service.impl;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -10,11 +9,11 @@ import zhanuzak.exceptions.NotFoundException;
 import zhanuzak.repo.CompanyRepository;
 import zhanuzak.repo.CourseRepository;
 import zhanuzak.repo.InstructorRepository;
-import zhanuzak.request.InstructorRequest;
-import zhanuzak.response.AboutInstructor;
-import zhanuzak.response.CounterStudentByGroup;
-import zhanuzak.response.InstructorResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.InstructorRequest;
+import zhanuzak.dto.response.AboutInstructor;
+import zhanuzak.dto.response.CounterStudentByGroup;
+import zhanuzak.dto.response.InstructorResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.InstructorService;
 
 import java.util.ArrayList;

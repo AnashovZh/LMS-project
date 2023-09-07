@@ -2,6 +2,7 @@ package zhanuzak.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import zhanuzak.enums.Role;
 import zhanuzak.enums.SpecialAction;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class Instructor {
     @Column(name = "phone_number")
     private String phoneNumber;
     private SpecialAction specialAction;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @ManyToMany(cascade = {PERSIST,DETACH,REFRESH,MERGE})
     private List<Company> companies;
     @OneToMany(mappedBy = "instructor",cascade = {PERSIST,DETACH,REFRESH,MERGE})

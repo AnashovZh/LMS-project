@@ -1,4 +1,4 @@
-package zhanuzak.request;
+package zhanuzak.dto.request;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

@@ -2,9 +2,10 @@ package zhanuzak.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import zhanuzak.request.CourseRequest;
-import zhanuzak.response.CourseResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.pagination.CoursePagination;
+import zhanuzak.dto.request.CourseRequest;
+import zhanuzak.dto.response.CourseResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.CourseService;
 
 import java.util.List;
@@ -39,19 +40,31 @@ public class CourseApi {
     /**
      * V -  Курсту чыгарып жатканда датасы мн сорттолуп чыксын
      */
-    @GetMapping("/dateOfStartSortCourseNew")
+    @GetMapping("/dateOfStartSortCourse/news")
     List<CourseResponse> dateOfStartCourseNew() {
         return courseService.dateOfStartCourseNew();
     }
 
+    @GetMapping("dateOfStartSortCourse/owns")
+    List<CourseResponse> dateOfStartSortCourse() {
+        return courseService.dateOfStartCourseOwns();
+    }
+
 
     @PutMapping("/{id}")
-    SimpleResponse updateCourse(@PathVariable Long id, @RequestBody CourseRequest courseRequest) {
+    SimpleResponse updateCourse(@PathVariable Long id,
+                                @RequestBody CourseRequest courseRequest) {
         return courseService.updateCourse(id, courseRequest);
     }
 
     @PostMapping("/{id}")
     SimpleResponse deleteCourse(@PathVariable Long id) {
         return courseService.deleteCourse(id);
+    }
+
+    @GetMapping("/pagination")
+    CoursePagination getAllCoursePagination(@RequestParam int currentPage, @RequestParam int pageSize) {
+        return courseService.getAllCoursesPagination(currentPage, pageSize);
+
     }
 }

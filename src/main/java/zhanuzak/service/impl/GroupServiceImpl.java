@@ -6,14 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zhanuzak.entity.Course;
 import zhanuzak.entity.Group;
-import zhanuzak.entity.Student;
 import zhanuzak.exceptions.NotFoundException;
 import zhanuzak.repo.CourseRepository;
 import zhanuzak.repo.GroupRepository;
-import zhanuzak.request.GroupRequest;
-import zhanuzak.response.CounterStudentByGroup;
-import zhanuzak.response.GroupResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.GroupRequest;
+import zhanuzak.dto.response.CounterStudentByGroup;
+import zhanuzak.dto.response.GroupResponse;
+import zhanuzak.dto.response.SimpleResponse;
 import zhanuzak.service.GroupService;
 
 import java.util.ArrayList;

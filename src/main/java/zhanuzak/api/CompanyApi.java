@@ -2,10 +2,12 @@ package zhanuzak.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import zhanuzak.request.CompanyRequest;
-import zhanuzak.response.AboutCompany;
-import zhanuzak.response.CompanyResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.pagination.CompanyPagination;
+import zhanuzak.dto.request.CompanyRequest;
+import zhanuzak.dto.response.AboutCompany;
+import zhanuzak.dto.response.CompanyResponse;
+import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.dto.response.StudentResponse;
 import zhanuzak.service.CompanyService;
 
 import java.util.List;
@@ -55,7 +57,24 @@ public class CompanyApi {
     }
 
     @PostMapping("/{id}")
-    SimpleResponse deleteInstructor(@PathVariable Long id) {
-        return companyService.deleteInstructor(id);
+    SimpleResponse deleteCompany(@PathVariable Long id) {
+        return companyService.deleteCompany(id);
+    }
+
+    @GetMapping("{id}/students/online")
+    List<StudentResponse> getAllStudentsOnlineEducation(@PathVariable Long id) {
+        return companyService.getAllStudentsOnlineEducation(id);
+    }
+
+    @GetMapping("{id}/students/offline")
+    List<StudentResponse> getAllStudentsOfflineEducation(@PathVariable Long id) {
+        return companyService.getAllStudentsOfflineEducation(id);
+    }
+
+    @GetMapping("/pagination")
+    public CompanyPagination paginationCompany(@RequestParam int currentPage,
+                                               @RequestParam int pageSize) {
+        return companyService.getAllPaginationCompany(currentPage, pageSize);
+
     }
 }

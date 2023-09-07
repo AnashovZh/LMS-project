@@ -1,4 +1,4 @@
-package zhanuzak.response;
+package zhanuzak.dto.response;
 
 import jakarta.persistence.Column;
 import lombok.Builder;

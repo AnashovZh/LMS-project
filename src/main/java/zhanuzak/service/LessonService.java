@@ -1,8 +1,8 @@
 package zhanuzak.service;
 
-import zhanuzak.request.LessonRequest;
-import zhanuzak.response.LessonResponse;
-import zhanuzak.response.SimpleResponse;
+import zhanuzak.dto.request.LessonRequest;
+import zhanuzak.dto.response.LessonResponse;
+import zhanuzak.dto.response.SimpleResponse;
 
 import java.util.List;
 
