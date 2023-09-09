@@ -1,58 +1,70 @@
 package zhanuzak.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zhanuzak.entity.*;
-import zhanuzak.exceptions.NotFoundException;
-import zhanuzak.repo.CompanyRepository;
-import zhanuzak.repo.CourseRepository;
-import zhanuzak.repo.InstructorRepository;
 import zhanuzak.dto.request.InstructorRequest;
 import zhanuzak.dto.response.AboutInstructor;
 import zhanuzak.dto.response.CounterStudentByGroup;
 import zhanuzak.dto.response.InstructorResponse;
 import zhanuzak.dto.response.SimpleResponse;
+import zhanuzak.entity.*;
+import zhanuzak.exceptions.NotFoundException;
+import zhanuzak.repo.CompanyRepository;
+import zhanuzak.repo.CourseRepository;
+import zhanuzak.repo.InstructorRepository;
+import zhanuzak.repo.UserRepository;
 import zhanuzak.service.InstructorService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class InstructorServiceImpl implements InstructorService {
+    private final UserRepository userRepository;
     private final InstructorRepository instructorRepository;
     private final CompanyRepository companyRepository;
     private final CourseRepository courseRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<InstructorResponse> getAllInstructors() {
         return instructorRepository.findAllInstructors();
     }
 
-    @Override
-    public SimpleResponse saveInstructor(InstructorRequest instructorRequest) {
-        Instructor instructor = new Instructor();
-        instructor.setFirstName(instructorRequest.firstName());
-        instructor.setLastName(instructorRequest.lastName());
-        instructor.setPhoneNumber(instructorRequest.phoneNumber());
-        instructor.setSpecialAction(instructorRequest.specialAction());
-        instructorRepository.save(instructor);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Instructor successfully saved ☺")
-                .build();
-    }
 
     @Override
     public InstructorResponse findInstructorById(Long id) {
         return instructorRepository.findInstructorById(id).orElseThrow(() ->
                 new NotFoundException("Instructor with id:" + id + " not found !!!"));
+    }
+
+
+    @Override
+    public SimpleResponse saveInstructorToCompany(Long companyId, InstructorRequest instructorRequest) {
+        Company company = companyRepository.findById(companyId).orElseThrow(() ->
+                new NotFoundException("Company with id:" + companyId + " not found !!!"));
+        Instructor instructor = new Instructor();
+        instructor.setFirstName(instructorRequest.firstName());
+        instructor.setLastName(instructorRequest.lastName());
+        instructor.setEmail(instructorRequest.email());
+        instructor.setPhoneNumber(instructorRequest.phoneNumber());
+        instructor.setPassword(passwordEncoder.encode(instructorRequest.password()));
+        instructor.setSpecialAction(instructorRequest.specialAction());
+        instructor.setRole(instructorRequest.role());
+        instructor.setCompanies(List.of(company));
+        instructorRepository.save(instructor);
+        log.info("Instructor successfully saved to Company with id:" + companyId);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Successfully instructor saved  ☺")
+                .build();
     }
 
     @Override
@@ -72,31 +84,26 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public SimpleResponse deleteInstructor(Long id) {
+//        new ArrayList<User>((Collection<? extends User>) userRepository.findAll()).forEach(user -> user.setInstructor(null));
+//        instructorRepository.deleteAll();
         Instructor instructor = instructorRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("Instructor with id :" + id + " not found !!!"));
-        instructorRepository.delete(instructor);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Instructor with id:" + id + " successfully deleted ☺")
-                .build();
-    }
-
-    @Override
-    public SimpleResponse assignInstructorToCompany(Long companyId, Long id) {
-        Company company = companyRepository.findById(companyId).orElseThrow(() ->
-                new NotFoundException("Company with id:" + companyId + " not found !!!"));
-        Instructor instructor = instructorRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("Instructor with id:" + id + " not found !!!"));
-        company.getInstructors().add(instructor);
-        List<Company> companies = new ArrayList<>();
-        companies.add(company);
-        instructor.setCompanies(companies);
-        companyRepository.save(company);
-        instructorRepository.save(instructor);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Successfully assign ☺")
-                .build();
+                new NotFoundException("Instructor" + "with id:" + id + " not found !!!"));
+        if (instructor != null) {
+            User user = instructor.getUser();
+            if (user != null) {
+                user.setInstructor(null);
+            }
+            instructorRepository.deleteById(id);
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .message("Instructor with id:" + id + " successfully deleted ☺")
+                    .build();
+        } else {
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.NOT_FOUND)
+                    .message("Instructor with id:" + id + " not found !!!")
+                    .build();
+        }
     }
 
     @Override
@@ -161,5 +168,51 @@ public class InstructorServiceImpl implements InstructorService {
                 new NotFoundException("Instructor with id:" + id + " not found !!!"));
         return instructor.getCourses().stream().flatMap(course -> course.getGroups().stream())
                 .flatMap(group -> group.getStudents().stream()).collect(Collectors.toList());
+    }
+
+    @Override
+    public SimpleResponse deleteInstructorSimple(Long id) {
+        instructorRepository.deleteById(id);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Instructor with id:" + id + " successfully deleted ☺")
+                .build();
+    }
+
+    @Override
+    public  SimpleResponse saveInstructor(InstructorRequest instructorRequest) {
+        Instructor instructor=new Instructor();
+        instructor.setFirstName(instructorRequest.firstName());
+        instructor.setLastName(instructorRequest.lastName());
+        instructor.setEmail(instructorRequest.email());
+        instructor.setPhoneNumber(instructorRequest.phoneNumber());
+        String password=instructorRequest.password();
+        if (instructorRequest.password()!=null){
+            instructor.setPassword(passwordEncoder.encode(password));
+        }
+        instructor.setSpecialAction(instructorRequest.specialAction());
+        instructor.setRole(instructorRequest.role());
+        instructorRepository.save(instructor);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Instructor successfully update ☺")
+                .build();
+    }
+
+    @Override
+    public SimpleResponse assignInstructorToCompany(Long companyId, Long id) {
+        Instructor instructor = instructorRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Instructor with id:" + id + " not found !!!"));
+        Company company = companyRepository.findById(companyId).orElseThrow(() ->
+                new NotFoundException("Company with id:" + companyId + " not found !!!"));
+        company.getInstructors().add(instructor);
+        instructor.getCompanies().add(company);
+        instructorRepository.save(instructor);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Instructor with Id:"+id+" successfully assign  ☺")
+                .build();
+
+
     }
 }

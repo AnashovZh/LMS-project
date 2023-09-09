@@ -31,7 +31,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public SimpleResponse saveGroup(Long courseId, GroupRequest groupRequest) {
+    public SimpleResponse saveGroupWithCourse(Long courseId, GroupRequest groupRequest) {
         Course course = courseRepository.findById(courseId).orElseThrow(() ->
                 new NotFoundException("Course with id:" + courseId + " not found !!!"));
         List<Course> courses = new ArrayList<>();
@@ -92,6 +92,19 @@ public class GroupServiceImpl implements GroupService {
         return CounterStudentByGroup.builder()
                 .counter(counter)
                 .description("There are so many students in the Group with this id:" + groupId)
+                .build();
+    }
+
+    @Override
+    public SimpleResponse saveGroup(GroupRequest groupRequest) {
+        Group group=new Group();
+        group.setGroupName(groupRequest.groupName());
+        group.setImageLink(groupRequest.imageLink());
+        group.setDescription(groupRequest.description());
+        groupRepository.save(group);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Group with id:" + group.getId() + " successfully saved ☺")
                 .build();
     }
 }

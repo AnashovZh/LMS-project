@@ -1,6 +1,8 @@
 package zhanuzak.api;
 
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zhanuzak.dto.pagination.CoursePagination;
 import zhanuzak.dto.request.CourseRequest;
@@ -16,54 +18,54 @@ import java.util.List;
 public class CourseApi {
     private final CourseService courseService;
 
+    @PermitAll
     @GetMapping
     List<CourseResponse> getAllCourses() {
         return courseService.getAllCourses();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{companyId}/company")
     SimpleResponse saveCourseToCompany(@PathVariable Long companyId,
                                        @RequestBody CourseRequest courseRequest) {
         return courseService.saveCourseToCompany(companyId, courseRequest);
     }
 
-    @PostMapping
-    SimpleResponse saveCourse(@RequestBody CourseRequest courseRequest) {
-        return courseService.saveCourse(courseRequest);
-    }
-
+    @PermitAll
     @GetMapping("/{id}")
     CourseResponse getCourseById(@PathVariable Long id) {
         return courseService.findCourseById(id);
     }
 
-    /**
-     * V -  Курсту чыгарып жатканда датасы мн сорттолуп чыксын
-     */
+    @PermitAll
     @GetMapping("/dateOfStartSortCourse/news")
     List<CourseResponse> dateOfStartCourseNew() {
         return courseService.dateOfStartCourseNew();
     }
 
+    @PermitAll
     @GetMapping("dateOfStartSortCourse/owns")
     List<CourseResponse> dateOfStartSortCourse() {
         return courseService.dateOfStartCourseOwns();
     }
 
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     SimpleResponse updateCourse(@PathVariable Long id,
                                 @RequestBody CourseRequest courseRequest) {
         return courseService.updateCourse(id, courseRequest);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}")
     SimpleResponse deleteCourse(@PathVariable Long id) {
         return courseService.deleteCourse(id);
     }
 
+    @PermitAll
     @GetMapping("/pagination")
-    CoursePagination getAllCoursePagination(@RequestParam int currentPage, @RequestParam int pageSize) {
+    CoursePagination getAllCoursePagination(@RequestParam int currentPage,
+                                            @RequestParam int pageSize) {
         return courseService.getAllCoursesPagination(currentPage, pageSize);
 
     }

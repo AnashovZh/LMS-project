@@ -10,7 +10,7 @@ import java.util.List;
 public interface GroupService {
     List<GroupResponse> getAllGroups();
 
-    SimpleResponse saveGroup(Long courseId, GroupRequest groupRequest);
+    SimpleResponse saveGroupWithCourse(Long courseId, GroupRequest groupRequest);
 
     GroupResponse findGroupById(Long id);
 
@@ -19,4 +19,6 @@ public interface GroupService {
     SimpleResponse deleteGroup(Long id);
 
     CounterStudentByGroup counterStudentsByGroup(Long groupId);
+
+    SimpleResponse saveGroup(GroupRequest groupRequest);
 }

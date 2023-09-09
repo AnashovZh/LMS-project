@@ -10,7 +10,6 @@ import java.util.List;
 public interface CourseService {
     List<CourseResponse> getAllCourses();
 
-    SimpleResponse saveCourse(CourseRequest courseRequest);
 
     CourseResponse findCourseById(Long id);
 

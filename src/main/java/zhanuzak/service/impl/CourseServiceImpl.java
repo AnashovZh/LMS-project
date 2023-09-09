@@ -32,18 +32,6 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findAllCourses();
     }
 
-    @Override
-    public SimpleResponse saveCourse(CourseRequest courseRequest) {
-        Course course = new Course();
-        course.setCourseName(courseRequest.courseName());
-        course.setDateOfStart(courseRequest.dateOfStart());
-        course.setDescription(courseRequest.description());
-        courseRepository.save(course);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Course with id:" + course.getId() + " successfully saved ☺")
-                .build();
-    }
 
     @Override
     public CourseResponse findCourseById(Long id) {

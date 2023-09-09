@@ -1,6 +1,8 @@
 package zhanuzak.api;
 
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zhanuzak.dto.request.StudentRequest;
 import zhanuzak.dto.response.SimpleResponse;
@@ -16,37 +18,51 @@ import java.util.Map;
 public class StudentApi {
     private final StudentService studentService;
 
+    @PermitAll
     @GetMapping()
     List<StudentResponse> getAllStudents() {
         return studentService.getAllStudents();
     }
 
-    @PostMapping
-    SimpleResponse saveStudent(@RequestBody StudentRequest studentRequest) {
-        return studentService.saveStudent(studentRequest);
-    }
 
-    @PostMapping("/{groupId}/group/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping("/{groupId}/group")
     SimpleResponse saveStudentToGroup(@PathVariable Long groupId,
-                                      @PathVariable Long id) {
-        return studentService.saveStudentToGroup(groupId, id);
+                                      @RequestBody StudentRequest studentRequest) {
+        return studentService.saveStudentToGroup(groupId, studentRequest);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/{groupId}/assign/{studentId}")
+    SimpleResponse assignStudentToGroup(@PathVariable Long studentId, @PathVariable Long groupId) {
+        return studentService.assignStudentToGroup(studentId, groupId);
+
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     SimpleResponse updateStudent(@PathVariable Long id,
                                  @RequestBody StudentRequest studentRequest) {
         return studentService.updateStudent(id, studentRequest);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}")
     SimpleResponse deleteStudent(@PathVariable Long id) {
         return studentService.deleteStudent(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     @PostMapping("isBlocked/{id}")
     SimpleResponse isBlockedStudent(@PathVariable Long id,
                                     @RequestBody Map<String, Object> fields) {
         return studentService.isBlockedStudent(id, fields);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    @PostMapping("/save")
+    SimpleResponse saveStudent(@RequestBody StudentRequest studentRequest) {
+        return studentService.save(studentRequest);
     }
 
 }

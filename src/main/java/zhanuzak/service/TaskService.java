@@ -9,11 +9,13 @@ import java.util.List;
 public interface TaskService {
     List<TaskResponse> getAllTasks();
 
-    SimpleResponse saveTask(Long lessonId, TaskRequest taskRequest);
+    SimpleResponse saveTaskToLesson(Long lessonId, TaskRequest taskRequest);
 
     TaskResponse getTaskById(Long id);
 
     SimpleResponse updateTaskWithLesson(Long lessonId, Long id, TaskRequest taskRequest);
 
     SimpleResponse deleteTask(Long id);
+
+    SimpleResponse saveTask(TaskRequest taskRequest);
 }

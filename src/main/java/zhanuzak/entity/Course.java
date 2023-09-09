@@ -20,7 +20,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_seq")
     @SequenceGenerator(name = "course_seq",allocationSize = 1)
     private Long id;
-    @Column(name = "course_name")
+    @Column(name = "course_name",unique = true)
     private String courseName;
     @Column(name = "date_of_start")
     private LocalDate dateOfStart;

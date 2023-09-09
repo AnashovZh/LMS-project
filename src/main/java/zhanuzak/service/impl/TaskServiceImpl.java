@@ -29,7 +29,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public SimpleResponse saveTask(Long lessonId, TaskRequest taskRequest) {
+    public SimpleResponse saveTaskToLesson(Long lessonId, TaskRequest taskRequest) {
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() ->
                 new NotFoundException("Lesson with id:" + lessonId + " not found !!!"));
         Task task = new Task();
@@ -73,6 +73,19 @@ public class TaskServiceImpl implements TaskService {
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Task with id:" + id + " successfully deleted ☺ ")
+                .build();
+    }
+
+    @Override
+    public SimpleResponse saveTask(TaskRequest taskRequest) {
+        Task task=new Task();
+        task.setTaskName(taskRequest.taskName());
+        task.setTaskText(taskRequest.taskText());
+        task.setDeadLine(taskRequest.deadLine());
+        taskRepository.save(task);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.CREATED)
+                .message("Task with id:" + task.getId() + " successfully saved ☺ ")
                 .build();
     }
 }

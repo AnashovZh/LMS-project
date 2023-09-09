@@ -12,7 +12,6 @@ import java.util.List;
 public interface InstructorService {
     List<InstructorResponse> getAllInstructors();
 
-    SimpleResponse saveInstructor(InstructorRequest instructorRequest);
 
     InstructorResponse findInstructorById(Long id);
 
@@ -20,7 +19,7 @@ public interface InstructorService {
 
     SimpleResponse deleteInstructor(Long id);
 
-    SimpleResponse assignInstructorToCompany(Long companyId, Long id);
+    SimpleResponse saveInstructorToCompany(Long companyId, InstructorRequest instructorRequest);
 
     CounterStudentByGroup counterStudentsByInstructor(Long id);
 
@@ -28,4 +27,10 @@ public interface InstructorService {
 
     AboutInstructor aboutAllInstructor(Long id);
     List<Student>getAllStudentsByInstructorId(Long id);
+
+    SimpleResponse deleteInstructorSimple(Long id);
+
+    SimpleResponse saveInstructor(InstructorRequest instructorRequest);
+
+    SimpleResponse assignInstructorToCompany(Long companyId, Long id);
 }

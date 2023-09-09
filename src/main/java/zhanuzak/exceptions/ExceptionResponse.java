@@ -1,6 +1,15 @@
 package zhanuzak.exceptions;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
-
-public record ExceptionResponse(HttpStatus httpStatus,String exceptionClassName,String message) {
+@Getter@Setter
+@Builder
+@AllArgsConstructor
+public class ExceptionResponse {
+    private HttpStatus httpStatus;
+    private String exceptionClassName;
+    private String message;
 }

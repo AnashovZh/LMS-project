@@ -29,7 +29,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public SimpleResponse saveLesson(Long courseId, LessonRequest lessonRequest) {
+    public SimpleResponse saveLessonToCourse(Long courseId, LessonRequest lessonRequest) {
         Course course = courseRepository.findById(courseId).orElseThrow(() ->
                 new NotFoundException("Course with id:" + courseId + " not found!!!"));
         Lesson lesson = new Lesson();
@@ -75,7 +75,18 @@ public class LessonServiceImpl implements LessonService {
         lessonRepository.delete(lesson);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Lesson with id:"+id+" successfully ☺ deleted")
+                .message("Lesson with id:" + id + " successfully ☺ deleted")
+                .build();
+    }
+
+    @Override
+    public SimpleResponse saveLesson(LessonRequest lessonRequest) {
+        Lesson lesson = new Lesson();
+        lesson.setLessonName(lessonRequest.lessonName());
+        lessonRepository.save(lesson);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Lesson with id:" + lesson.getId() + " successfully ☺ saved ")
                 .build();
     }
 }

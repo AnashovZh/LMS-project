@@ -1,6 +1,8 @@
 package zhanuzak.api;
 
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import zhanuzak.dto.request.TaskRequest;
 import zhanuzak.dto.response.SimpleResponse;
@@ -15,22 +17,33 @@ import java.util.List;
 public class TaskApi {
     private final TaskService taskService;
 
+    @PermitAll
     @GetMapping
     List<TaskResponse> getAllTasks() {
         return taskService.getAllTasks();
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    @PostMapping("/save")
+    SimpleResponse saveTask(@RequestBody TaskRequest taskRequest) {
+        return taskService.saveTask( taskRequest);
+    }
+
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     @PostMapping("/{lessonId}/lesson")
     SimpleResponse saveTask(@PathVariable Long lessonId,
                             @RequestBody TaskRequest taskRequest) {
-        return taskService.saveTask(lessonId, taskRequest);
+        return taskService.saveTaskToLesson(lessonId, taskRequest);
     }
 
+    @PermitAll
     @GetMapping("/{id}")
     TaskResponse getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     @PutMapping("/{lessonId}/update/{id}")
     SimpleResponse updateTaskWithTheLesson(@PathVariable Long lessonId,
                                            @PathVariable Long id,
@@ -38,9 +51,9 @@ public class TaskApi {
         return taskService.updateTaskWithLesson(lessonId, id, taskRequest);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     @PostMapping("/{id}")
     SimpleResponse deleteTask(@PathVariable Long id) {
         return taskService.deleteTask(id);
     }
-
 }

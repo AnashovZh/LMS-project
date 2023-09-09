@@ -19,20 +19,26 @@ import static jakarta.persistence.CascadeType.*;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instructor_seq")
-    @SequenceGenerator(name = "instructor_seq",allocationSize = 1)
+    @SequenceGenerator(name = "instructor_seq", allocationSize = 1)
     private Long id;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "phone_number")
+    @Column(unique = true)
+    private String email;
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
+    private String password;
+    @Enumerated(EnumType.STRING)
     private SpecialAction specialAction;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(cascade = {PERSIST,DETACH,REFRESH,MERGE})
+    @OneToOne(mappedBy = "instructor",cascade = ALL)
+    private User user;
+    @ManyToMany(cascade = {PERSIST, DETACH, REFRESH, MERGE})
     private List<Company> companies;
-    @OneToMany(mappedBy = "instructor",cascade = {PERSIST,DETACH,REFRESH,MERGE})
-    private List<Course>courses;
+    @OneToMany(mappedBy = "instructor", cascade = {PERSIST, DETACH, REFRESH, MERGE})
+    private List<Course> courses;
 
 }

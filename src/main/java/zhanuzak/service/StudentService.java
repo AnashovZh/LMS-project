@@ -11,13 +11,16 @@ public interface StudentService {
 
     List<StudentResponse> getAllStudents();
 
-    SimpleResponse saveStudent(StudentRequest studentRequest);
 
-    SimpleResponse saveStudentToGroup(Long groupId, Long id);
+    SimpleResponse saveStudentToGroup(Long groupId, StudentRequest studentRequest);
 
     SimpleResponse updateStudent(Long id, StudentRequest studentRequest);
 
     SimpleResponse deleteStudent(Long id);
 
     SimpleResponse isBlockedStudent(Long id, Map<String, Object> fields);
+
+    SimpleResponse save(StudentRequest studentRequest);
+
+    SimpleResponse assignStudentToGroup(Long studentId, Long groupId);
 }
